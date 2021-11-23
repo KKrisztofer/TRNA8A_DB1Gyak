@@ -1,0 +1,53 @@
+CREATE TABLE Tulajdonos
+(
+  TKod INT(3),
+  Nev VARCHAR(20) NOT NULL,
+  Varos VARCHAR(20),
+  PRIMARY KEY (TKod)
+);
+
+CREATE TABLE Auto
+(
+  Rendszam CHAR(7),
+  Tipus VARCHAR(25) NOT NULL,
+  Szin VARCHAR(15),
+  Kor INT(2),
+  Ar INT(8),
+  Tulaj INT(3),
+  PRIMARY KEY (Rendszam),
+  FOREIGN KEY (Tulaj) REFERENCES Tulajdonos(TKod)
+);
+
+INSERT INTO Tulajdonos VALUES
+(101,'Kis János','Miskolc'),
+(102,'Kis Éva','Szerencs'),
+(103,'Retek Ödön','Miskolc'),
+(104,'Virág Zoltán','Nyék'),
+(105,'Nagy Eszter','Nyék'),
+(106,'Kovács Magor','Szerencs'),
+(107,'Asztal Antal','Miskolc');
+
+INSERT INTO Auto VALUES
+('FER-831','Opel Corsa','Piros',18,390,101),
+('IXJ-239','Suzuki Swift','Zöld',15,450,105),
+('JAH-425','Skoda Fabia','Piros',13,620,102),
+('MLM-211','Toyota Yaris','Fehér',3,1850,105),
+('KFT-204','Opel Astra','Szürke',7,1250,106),
+('JCD-443','Opel Astra','Fehér',12,990,107),
+('KAP-290','BMW 316','Fekete',6,3250,102),
+('GDF-525','Renault Twingo','Fekete',16,280,NULL),
+('HUB-936','Suzuki Swift','Fekete',16,500,NULL);
+
+LEKÉRDEZÉSEK
+SELECT Auto.Rendszam, Tulajdonos.Nev FROM Tulajdonos INNER JOIN Auto ON Tulajdonos.TKod = Auto.Tulaj;
+SELECT Auto.Rendszam, Auto.Tipus, Auto.Kor, Auto.Ar, Tulajdonos.Nev AS 'Tulajdonos' FROM Tulajdonos INNER JOIN Auto ON Tulajdonos.TKod = Auto.Tulaj WHERE Tulajdonos.Varos = 'Miskolc';
+SELECT Tipus, Ar FROM Auto;
+SELECT Tulajdonos.Nev, Auto.Rendszam FROM Tulajdonos LEFT JOIN Auto On Auto.Tulaj = Tulajdonos.TKod;
+SELECT Auto.Rendszam, Tulajdonos.Nev FROM Auto LEFT JOIN Tulajdonos On Auto.Tulaj = Tulajdonos.TKod;
+SELECT Auto.Rendszam FROM Auto INNER JOIN Tulajdonos ON Auto.Tulaj = Tulajdonos.TKod WHERE Tulajdonos.Varos != 'Miskolc' AND Auto.Ar > (SELECT AVG(Auto.Ar) AS 'AtlagAr' FROM Auto INNER JOIN Tulajdonos ON Auto.Tulaj = Tulajdonos.TKod WHERE Tulajdonos.Varos = 'Miskolc');
+SELECT Tulajdonos.Nev FROM Tulajdonos INNER JOIN Auto ON Tulajdonos.TKod = Auto.Tulaj GROUP BY Tulajdonos.TKod HAVING COUNT(Auto.Rendszam) > 1;
+
+SELECT * FROM Auto WHERE Ar < (SELECT MAX(Ar) FROM Auto WHERE Szin = 'Piros');
+SELECT * FROM Auto WHERE Ar < (SELECT MIN(Ar) FROM Auto WHERE Szin = 'Piros');
+SELECT DISTINCT Nev FROM Tulajdonos INNER JOIN Auto ON Tulajdonos.TKod = Auto.Tulaj;
+SELECT Nev FROM Tulajdonos WHERE Nev NOT IN (SELECT DISTINCT Nev FROM Tulajdonos INNER JOIN Auto ON Tulajdonos.TKod = Auto.Tulaj);
