@@ -1,0 +1,11 @@
+SELECT nev, szuletesiIdo, email, telefon, cim FROM ugyfel;
+SELECT ugyfel.nev, fuvar.honnan, fuvar.hova, fuvar.indulas, fuvar.ar FROM fuvar INNER JOIN ugyfel ON fuvar.ugyfel = ugyfel.id WHERE honnan LIKE '%Miskolc%';
+SELECT nev, felvetelIdo FROM sofor WHERE felvetelIdo BETWEEN '2013-01-01 00:00:00' AND '2013-12-31 23:59:59';
+SELECT ugyfel.nev FROM ugyfel RIGHT JOIN kuponosztas ON ugyfel.id = kuponosztas.ugyfel;
+SELECT DISTINCT rendszam, gyarto, model, evjarat FROM auto INNER JOIN fuvar ON auto.id = fuvar.auto;
+SELECT rendszam, gyarto, model, evjarat FROM auto ORDER BY regDatum;
+SELECT sofor.nev AS 'Sofor', auto.gyarto, auto.model, fuvar.honnan, fuvar.hova, fuvar.indulas FROM fuvar INNER JOIN auto ON fuvar.auto = auto.id INNER JOIN sofor ON fuvar.sofor = sofor.id WHERE auto.rendszam = 'GKT342';
+SELECT ugyfel.nev, ugyfel.szuletesiIdo, fuvar.honnan, fuvar.hova, fuvar.indulas, fuvar.ar FROM fuvar INNER JOIN ugyfel ON fuvar.ugyfel = ugyfel.id WHERE ugyfel.id = (SELECT id FROM ugyfel ORDER BY szuletesiIdo DESC LIMIT 1);
+SELECT rendszam, gyarto, model, evjarat, COUNT(fuvar.id) AS 'fuvarSzam' FROM auto LEFT JOIN fuvar ON auto.id = fuvar.auto GROUP BY auto.id ORDER BY fuvarSzam;
+SELECT sofor.nev, SUM(IF(kuponosztas.kupon IS NULL, fuvar.ar, fuvar.ar/100*(SELECT 100-kedvezmeny FROM kupon WHERE id=kuponosztas.kupon))) AS 'bevetel' FROM fuvar LEFT JOIN ugyfel ON fuvar.ugyfel = ugyfel.id LEFT JOIN kuponosztas ON fuvar.id = kuponosztas.fuvar RIGHT JOIN sofor ON sofor.id = fuvar.sofor GROUP BY sofor.id;
+SELECT SUM(IF(kuponosztas.kupon IS NULL, fuvar.ar, fuvar.ar/100*(SELECT 100-kedvezmeny FROM kupon WHERE id=kuponosztas.kupon))) AS 'teljes bevetel' FROM fuvar LEFT JOIN ugyfel ON fuvar.ugyfel = ugyfel.id LEFT JOIN kuponosztas ON fuvar.id = kuponosztas.fuvar;
