@@ -1,0 +1,7 @@
+Γ count(*)(könyv)
+Γ avg(ar)(könyv)
+Γ min(ar)(könyv)
+Γ count(*)(ნtargy=‘AB’(könyv))
+Γ max(ar)(ნtargy=‘AB’(könyv))
+Π cim(ნ(ar>(Γ{avg(ar)}(könyv)))(könyv))
+Γ count(*)(ნ(ar>(Γ{avg(ar)}(könyv)))(könyv))

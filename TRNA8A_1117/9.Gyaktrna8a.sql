@@ -29,7 +29,7 @@ CREATE TABLE Komponens (
     alkatresz INT REFERENCES Alkatresz(akod)
 );
 
-Bővítse az alkatrész táblát egy ój ár mezővel.
+Bővítse az alkatrész táblát egy új ár mezővel.
 ALTER TABLE Alkatresz ADD ar INT;
 
 Mely gyártónak nincs terméke?
